@@ -1,0 +1,42 @@
+﻿@model ReservationListViewModel
+
+@if (TempData["ReservationDeleted"] != null)
+{
+    <p class="text-success">@TempData["ReservationDeleted"]</p>
+}
+
+@if (!Model.Reservations.Any())
+{
+    <p>No results</p>
+}
+
+else
+{
+
+    var groupedReservations = Model.Reservations.GroupBy(r => r.RestaurantName);
+
+
+@foreach (var group in groupedReservations)
+{
+    <h3>@group.Key</h3> <!-- Display the restaurant name as the table header -->
+    <table class="table table-condensed table-bordered">
+        <tr>
+            <th>Date and Time</th>
+            <th>Actions</th>
+        </tr>
+
+        @foreach (var reservation in group)
+        {
+            <tr>
+                <td>@reservation.date.ToLocalTime()</td>
+                <td>
+                    <a asp-action="Edit" asp-route-id="@reservation.Id.ToString()">Edit</a>
+                    <a asp-action="Delete" asp-route-id="@reservation.Id.ToString()">Delete</a>
+                </td>
+            </tr>
+        }
+    </table>
+}
+
+
+}
